@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+
+/* 3D hover card */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease;
+}
+.card-3d:hover {
+  transform: perspective(800px) rotateX(6deg) translateY(-6px);
+}
