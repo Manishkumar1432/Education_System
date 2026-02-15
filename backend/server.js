@@ -25,7 +25,6 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Static uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Health check
 app.get('/api', (req, res) => {
