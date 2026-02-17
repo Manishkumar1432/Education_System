@@ -20,42 +20,51 @@ const s3 = new S3Client({
 });
 
 // 🔹 CREATE NOTE
+const cloudinary = require("../utils/cloudinary");
+const streamifier = require("streamifier");
+
 const createNote = asyncHandler(async (req, res) => {
   const { title, content, tags } = req.body;
+  console.log(title,content,tags);
+  
   let fileUrl = null;
 
   if (req.file) {
-    const fileName = `${Date.now()}-${req.file.originalname}`;
+    const uploadFromBuffer = () => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "auto", // Important for PDF
+            folder: "notes_uploads",
+          },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
 
-    // Upload PDF to S3
-    await s3.send(new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: fileName,
-      Body: req.file.buffer,
-      ContentType: req.file.mimetype,
-    }));
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+    };
 
-    // Generate signed URL (24 hours)
-    fileUrl = await getSignedUrl(
-      s3,
-      new GetObjectCommand({
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: fileName
-      }),
-      { expiresIn: 24 * 60 * 60 }
-    );
+    const result = await uploadFromBuffer();
+    fileUrl = result.secure_url;
   }
+console.log(fileUrl);
 
   const note = await Note.create({
     title,
     content,
     filePath: fileUrl,
     teacher: req.user._id,
-    tags: tags ? tags.split(',').map(t => t.trim()) : [],
+    tags: tags ? tags.split(",").map((t) => t.trim()) : [],
   });
 
   res.status(201).json(note);
 });
+
+module.exports = { createNote };
+
 
 // 🔹 GET ALL NOTES
 const getNotes = asyncHandler(async (req, res) => {
