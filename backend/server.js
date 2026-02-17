@@ -18,13 +18,17 @@ const app = express();
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000' // vite dev server port
+  ],
   credentials: true
 }));
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Static uploads
+// serve uploaded files (notes/videos)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Health check
 app.get('/api', (req, res) => {

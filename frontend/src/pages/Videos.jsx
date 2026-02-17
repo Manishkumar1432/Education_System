@@ -1,16 +1,30 @@
 import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api, { setAuthToken } from '../services/api'
 
 export default function Videos() {
   const { user, token } = useAuth()
+  const location = useLocation()
   const [videos, setVideos] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [vForm, setVForm] = useState({ title: '', description: '', tags: '' })
   const [vFile, setVFile] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => { api.get('/videos').then(r => setVideos(r.data)).catch(() => {}) }, [])
+  useEffect(() => {
+    api.get('/videos')
+      .then(r => {
+        let data = r.data
+        if (location.state?.removed) {
+          data = data.filter(v => v._id !== location.state.removed)
+          // clear the state so refresh further doesn't re-filter
+          window.history.replaceState({}, '')
+        }
+        setVideos(data)
+      })
+      .catch(() => {})
+  }, [location.state])
 
   const uploadVideo = async (e) => {
     e.preventDefault(); setLoading(true)
@@ -81,7 +95,9 @@ export default function Videos() {
               </div>
             </div>
             <div className="mt-3">
-              <a className="text-blue-600" href={v.filePath} target="_blank" rel="noreferrer">Play</a>
+              <Link to={`/videos/${v._id}`} className="text-blue-600">
+                Play &rarr;
+              </Link>
             </div>
           </div>
         ))}

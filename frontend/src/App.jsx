@@ -3,7 +3,6 @@ import { Route, Routes, useLocation } from 'react-router-dom'
 import AnimatedSidebar from './components/AnimatedSidebar'
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
-import { useAuth } from './context/AuthContext'
 import Home from './pages/Home'
 import ImportantQuestions from './pages/ImportantQuestions'
 import Login from './pages/Login'
@@ -13,6 +12,7 @@ import Quizzes from './pages/Quizzes'
 import Signup from './pages/Signup'
 import StudentDashboard from './pages/StudentDashboard'
 import TeacherDashboard from './pages/TeacherDashboard'
+import VideoDetail from './pages/VideoDetail'
 import Videos from './pages/Videos'
 
 export default function App() {
@@ -40,6 +40,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/videos" element={<Videos />} />
+          <Route path="/videos/:id" element={<VideoDetail />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/questions" element={<ImportantQuestions />} />
           <Route path="/quizzes" element={<Quizzes />} />
@@ -52,3 +53,6 @@ export default function App() {
     </div>
   )
 }
+
+
+//2nd commit

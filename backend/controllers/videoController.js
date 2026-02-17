@@ -1,4 +1,6 @@
 const asyncHandler = require('express-async-handler');
+const fs = require('fs');
+const path = require('path');
 const Video = require('../models/Video');
 
 const uploadVideo = asyncHandler(async (req, res) => {
@@ -58,6 +60,15 @@ const deleteVideo = asyncHandler(async (req, res) => {
   if (String(video.teacher) !== String(req.user._id)) {
     res.status(403);
     throw new Error('Forbidden');
+  }
+  // remove file from disk if it exists
+  try {
+    const filePath = path.join(__dirname, '..', video.filePath);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  } catch (e) {
+    console.error('Failed to delete video file:', e);
   }
   await video.remove();
   res.json({ message: 'Video removed' });
