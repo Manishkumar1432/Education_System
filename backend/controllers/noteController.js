@@ -77,20 +77,25 @@ const updateNote = asyncHandler(async (req, res) => {
   res.json(note);
 });
 
-// 🔹 DELETE NOTE + S3 PDF
+// 🔹 DELETE NOTE + Cloudinary file (notes use Cloudinary, not S3)
 const deleteNote = asyncHandler(async (req, res) => {
   const note = await Note.findById(req.params.id);
   if (!note) throw new Error('Note not found');
   if (String(note.teacher) !== String(req.user._id)) throw new Error('Forbidden');
 
-  if (note.filePath) {
-    const url = new URL(note.filePath);
-    const fileName = url.pathname.split('/').pop();
-
-    await s3.send(new DeleteObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: fileName
-    }));
+  if (note.filePath && note.filePath.includes('cloudinary.com')) {
+    try {
+      const url = new URL(note.filePath);
+      const pathParts = url.pathname.split('/');
+      const uploadIdx = pathParts.indexOf('upload');
+      if (uploadIdx !== -1 && pathParts[uploadIdx + 1]) {
+        const afterVersion = pathParts.slice(uploadIdx + 2).join('/');
+        const publicId = afterVersion.replace(/\.[^/.]+$/, '');
+        await cloudinary.uploader.destroy(publicId, { resource_type: 'auto' });
+      }
+    } catch (err) {
+      console.warn('Cloudinary delete failed (note DB record will still be removed):', err.message);
+    }
   }
 
   await note.deleteOne();

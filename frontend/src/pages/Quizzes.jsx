@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import api from '../services/api'
+import api, { setAuthToken } from '../services/api'
 
 export default function Quizzes() {
   const { user, token } = useAuth()

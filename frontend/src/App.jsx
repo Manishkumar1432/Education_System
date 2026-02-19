@@ -8,6 +8,7 @@ import ImportantQuestions from './pages/ImportantQuestions'
 import Login from './pages/Login'
 import Notes from './pages/Notes'
 import Profile from './pages/Profile'
+import QuizDetail from './pages/QuizDetail'
 import Quizzes from './pages/Quizzes'
 import Signup from './pages/Signup'
 import StudentDashboard from './pages/StudentDashboard'
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/notes" element={<Notes />} />
           <Route path="/questions" element={<ImportantQuestions />} />
           <Route path="/quizzes" element={<Quizzes />} />
+          <Route path="/quizzes/:id" element={<QuizDetail />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/student" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
           <Route path="/teacher" element={<ProtectedRoute role="teacher"><TeacherDashboard /></ProtectedRoute>} />
@@ -55,4 +57,4 @@ export default function App() {
 }
 
 
-//3nd commit
+//4nd commit

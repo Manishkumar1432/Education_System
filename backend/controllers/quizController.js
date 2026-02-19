@@ -36,7 +36,7 @@ const deleteQuiz = asyncHandler(async (req, res) => {
   const quiz = await Quiz.findById(req.params.id);
   if (!quiz) { res.status(404); throw new Error('Not found'); }
   if (String(quiz.teacher) !== String(req.user._id)) { res.status(403); throw new Error('Forbidden'); }
-  await quiz.remove();
+  await quiz.deleteOne();
   res.json({ message: 'Deleted' });
 });
 
