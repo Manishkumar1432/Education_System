@@ -14,6 +14,7 @@ const quizRoutes = require('./routes/quizzes');
 const resultRoutes = require('./routes/results');
 
 const app = express();
+const port =process.env.PORT || 4000;
 
 // Middleware
 app.use(helmet());

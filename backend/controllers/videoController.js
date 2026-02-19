@@ -70,7 +70,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
   } catch (e) {
     console.error('Failed to delete video file:', e);
   }
-  await video.remove();
+  await video.deleteOne();
   res.json({ message: 'Video removed' });
 });
 

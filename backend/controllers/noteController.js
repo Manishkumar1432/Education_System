@@ -1,25 +1,5 @@
 const asyncHandler = require('express-async-handler');
 const Note = require('../models/Note');
-const {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-  GetObjectCommand
-} = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-
-// S3 Client with region-specific endpoint
-const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  endpoint: `https://s3.${process.env.AWS_REGION}.amazonaws.com`, // ← region-specific endpoint
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-  forcePathStyle: false, // virtual-hosted style
-});
-
-// 🔹 CREATE NOTE
 const cloudinary = require("../utils/cloudinary");
 const streamifier = require("streamifier");
 
