@@ -6,6 +6,7 @@ import api, { setAuthToken } from '../services/api'
 export default function Quizzes() {
   const { user, token } = useAuth()
   const [quizzes, setQuizzes] = useState([])
+  const [query, setQuery] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -81,8 +82,16 @@ export default function Quizzes() {
         </form>
       )}
 
+      <div className="mb-4">
+        <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search quizzes..." className="w-full p-2 rounded border" />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {quizzes.map(q => (
+        {quizzes.filter(z => {
+          if (!query || query.trim().length < 1) return true
+          const q = query.toLowerCase()
+          return (z.title || '').toLowerCase().includes(q) || (z.description || '').toLowerCase().includes(q)
+        }).map(q => (
           <div key={q._id} className="p-4 bg-white dark:bg-gray-900 rounded shadow card-3d">
             <div className="flex justify-between">
               <div>

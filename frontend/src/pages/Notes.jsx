@@ -4,6 +4,7 @@ import api, { setAuthToken } from '../services/api'
 
 export default function Notes() {
   const [notes, setNotes] = useState([])
+  const [query, setQuery] = useState('')
   const { user, token } = useAuth()
   const [showForm, setShowForm] = useState(false)
   const [title, setTitle] = useState('')
@@ -74,8 +75,16 @@ export default function Notes() {
         </form>
       )}
 
+      <div className="mb-4">
+        <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search notes..." className="w-full p-2 rounded border" />
+      </div>
+
       <div className="space-y-3">
-        {notes.map(n => (
+        {notes.filter(n => {
+          if (!query || query.trim().length < 1) return true
+          const q = query.toLowerCase()
+          return (n.title || '').toLowerCase().includes(q) || (n.content || '').toLowerCase().includes(q) || (n.tags || []).join(',').toLowerCase().includes(q)
+        }).map(n => (
           <div key={n._id} className="bg-white dark:bg-gray-900 p-4 rounded shadow">
             <h3 className="font-semibold">{n.title}</h3>
             <p className="text-sm text-gray-500">By {n.teacher?.name}</p>

@@ -7,6 +7,7 @@ export default function Videos() {
   const { user, token } = useAuth()
   const location = useLocation()
   const [videos, setVideos] = useState([])
+  const [query, setQuery] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [vForm, setVForm] = useState({ title: '', description: '', tags: '' })
   const [vFile, setVFile] = useState(null)
@@ -74,8 +75,16 @@ export default function Videos() {
         </form>
       )}
 
+      <div className="mb-4">
+        <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search videos..." className="w-full p-2 rounded border" />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {videos.map(v => (
+        {videos.filter(v => {
+          if (!query || query.trim().length < 1) return true
+          const q = query.toLowerCase()
+          return (v.title || '').toLowerCase().includes(q) || (v.description || '').toLowerCase().includes(q) || (v.tags || []).join(',').toLowerCase().includes(q)
+        }).map(v => (
           <div key={v._id} className="p-4 bg-white dark:bg-gray-900 rounded shadow card-3d">
             <div className="flex justify-between">
               <div>

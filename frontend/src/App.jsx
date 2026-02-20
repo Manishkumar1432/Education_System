@@ -13,6 +13,7 @@ import Quizzes from './pages/Quizzes'
 import Signup from './pages/Signup'
 import StudentDashboard from './pages/StudentDashboard'
 import TeacherDashboard from './pages/TeacherDashboard'
+import TeacherResults from './pages/TeacherResults'
 import VideoDetail from './pages/VideoDetail'
 import Videos from './pages/Videos'
 
@@ -26,7 +27,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
 
-      {/* ✅ Show Header only if NOT hidden */}
+      {/* ✅ Show Header only if NOT hidden  */}
       {!hideLayout && <Header onMenu={() => setOpen(true)} />}
 
       {/* ✅ Show Sidebar only if NOT hidden */}
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/student" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
           <Route path="/teacher" element={<ProtectedRoute role="teacher"><TeacherDashboard /></ProtectedRoute>} />
+          <Route path="/teacher/results" element={<ProtectedRoute role="teacher"><TeacherResults /></ProtectedRoute>} />
         </Routes>
       </main>
 
