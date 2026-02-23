@@ -20,7 +20,7 @@ const port =process.env.PORT || 4000;
 app.use(helmet());
 app.use(cors({
   origin: [
-    'https://education-system-3-sj34.onrender.com/',
+    'https://education-system-3-sj34.onrender.com',
     'http://localhost:3000' // vite dev server port
   ],
   credentials: true
